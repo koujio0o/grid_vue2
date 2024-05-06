@@ -1,0 +1,31 @@
+<template>
+    <div>
+      <canvas ref="canvas" @paste="handlePaste" width="500" height="300" style="border: 1px solid black;"></canvas>
+    </div>
+  </template>
+  
+  <script>
+  export default {
+    methods: {
+      handlePaste(e) {
+        const items = e.clipboardData.items;
+        for (let i = 0; i < items.length; i++) {
+          if (items[i].type.indexOf('image') !== -1) {
+            const file = items[i].getAsFile();
+            const reader = new FileReader();
+            reader.onload = (event) => {
+              const img = new Image();
+              img.onload = () => {
+                const canvas = this.$refs.canvas;
+                const ctx = canvas.getContext('2d');
+                ctx.drawImage(img, 0, 0);
+              };
+              img.src = event.target.result;
+            };
+            reader.readAsDataURL(file);
+          }
+        }
+      }
+    }
+  }
+  </script>

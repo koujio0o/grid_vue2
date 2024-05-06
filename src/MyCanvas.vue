@@ -229,8 +229,6 @@ export default {
           var sh = img.naturalHeight;
           this.canvas_width = img.naturalWidth
           this.canvas_height = img.naturalHeight
-          // var dw = canvas.width;
-          // var dh = canvas.height;
           this.ctx.drawImage(img, 0, 0, sw, sh);
           // thiFFs.ctx.drawImage(img, 0, 0)
         }
