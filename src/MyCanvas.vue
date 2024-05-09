@@ -1,25 +1,30 @@
 <template>
   <div>
-    <div class="canvas-wrap">
-      <canvas ref="_canvas_photo" width="1000" height="1000" class="canvas"></canvas>
-      <canvas ref="_canvas_line" width="1000" height="1000" class="canvas"></canvas>
-    </div>
-    <div class="tools">
-      <!-- グリッド -->
-      <button v-on:click="drawRectangle">draw</button>
-      <!-- 削除ボタン -->
-      <button v-on:click="deleteDraw">delete</button>
-      <!-- 正方形 -->
-      <button v-on:click="toSquare">正方形に</button>
-      <div ref="pastearea" contenteditable="true" style="background:#fcc;">
-
-        ここで右クリックを押して<br>
-        貼り付けて下さい
-
+    <div class="two-columns">
+      <!-- 二つ目のカラム -->
+      <div class="column tools">
+        <!-- グリッド -->
+        <button v-on:click="drawRectangle">draw</button>
+        <!-- 削除ボタン -->
+        <button v-on:click="deleteDraw">delete</button>
+        <!-- 正方形 -->
+        <button v-on:click="toSquare">正方形に</button>
+        <div ref="pastearea" contenteditable="true" style="background:#fcc;">
+          ここで右クリックを押して<br>
+          貼り付けて下さい
+        </div>
+        <div><img id="pastearea" src=""></div>
+        <label><input type="range" v-model="grid_divide" min="1" max="10">グリッドでかさ{{   grid_divide   }}</label>
       </div>
-      <div><img id="pastearea" src=""></div>
-      <label><input type="range" v-model="grid_divide" min="1" max="10">グリッドでかさ{{   grid_divide   }}</label>
-    </div>
+    </div>  
+      <!-- 一つ目のカラム -->
+      <div class="column">
+        <div class="canvas-wrap">
+          <canvas ref="_canvas_photo" width="1000" height="1000" class="canvas"></canvas>
+          <canvas ref="_canvas_line" width="1000" height="1000" class="canvas"></canvas>
+        </div>
+      </div>
+      
   </div>
 </template>
 
@@ -36,6 +41,7 @@ export default {
       mouseY: 0,
       grid_width: 100,
       grid_height: 100,
+      is_line_visible: true,
     }
   },
   props: {
@@ -53,6 +59,7 @@ export default {
     // キー押下イベント
     onKeyDown(event) {
       console.log('a down')
+      // Aボタン押下
       if (event.key == 'a') {
         console.log('a down > a' + this.mouseX + ' ' + this.mouseY)
         // window.onmousemove = ()
@@ -63,7 +70,7 @@ export default {
 
         this.drawRectangle()
       } else if (event.key == 'f') {
-       
+       // Fボタン。終点
         this.deleteDraw()
         this.second_x = this.mouseX
         this.second_y = this.mouseY
@@ -72,6 +79,12 @@ export default {
         this.grid_height =  - this.first_y + this.second_ya
         this.drawRectangle()
 
+      } else if(event.key == 'd'){
+        console.log('w push')
+        this.toSquare()
+
+      } else if(event.key == 's'){
+        this.deleteDraw()
       }
 
     },
@@ -99,6 +112,7 @@ export default {
       this.ctx.lineTo(200, 200);
       this.ctx.stroke();
     },
+    // 正方形に
     toSquare(){
       this.deleteDraw()
 
@@ -271,7 +285,20 @@ export default {
 }
 
 .tools {
-  position: absolute;
-  top: 1200px;
+  /* position: absolute;
+  top: 1200px; */
 }
+
+.two-columns {
+    display: flex; /* flexboxを使用 */
+  }
+
+  .column {
+    flex: 1; /* カラムの幅を均等に分割 */
+    padding: 20px; /* 適切な間隔を設定 */
+  }
+
+  .canvas-wrap {
+    /* 一つ目のカラムのスタイル */
+  }
 </style>
